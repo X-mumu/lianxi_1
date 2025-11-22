@@ -42,9 +42,20 @@ static int __threads_create(thrd_pool_t * pool, size_t thrd_count)
         if(pool->threads) {
             int i=0;
             for(i=0; i<thrd_count; i++) {
-                if(pthread_create(newthread:&pool->threads[i], attr:&attr, __thread_routine, pool) != 0) {
+                if(pthread_create(newthread:&pool->threads[i], attr:&attr, __thread_routine, pool) == 0) {
                     break;
                 }
+            }
+            pool->thrd_count = i;
+            pthread_attr_destroy(attr:&attr);
+            if(i==thrd_count) {
+                return 0;
+            } 
+            __threads_terminate(pool);
+            free(pool->threads);
+            pool->threads = NULL;
         }
+        ret = -1;
     }
+    return ret;
 }
