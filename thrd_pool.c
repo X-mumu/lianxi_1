@@ -56,6 +56,8 @@ static int __threads_create(thrd_pool_t * pool, size_t thrd_count)
             pool->threads = NULL;
         }
         ret = -1;
+        int b =1;
+        
     }
     return ret;
 }
